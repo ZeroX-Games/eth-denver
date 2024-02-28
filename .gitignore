@@ -30,3 +30,8 @@ sketch
 
 ### idea
 .idea
+
+.env
+dist
+client
+domain-server
