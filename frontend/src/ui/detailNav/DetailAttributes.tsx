@@ -1,8 +1,9 @@
-import { Button, SimpleGrid, Text, VStack } from '@chakra-ui/react';
-import { IoGameController } from 'react-icons/io5';
+import { SimpleGrid, Text, VStack, Box } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+
 import StateCard from '@ui/shared/StateCard';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useFollowPointer } from '@/utilities/use-follow-pointer';
 
 const DetailAttributes = ({
   selectedFields,
@@ -10,23 +11,50 @@ const DetailAttributes = ({
   currentEvent,
   currentState,
   prevState,
-  attributeSize,
+  attributes,
+  eventSize,
 }: any) => {
-  const [hover, setHover] = useState<any>('HP');
+  const [onHover, setOnHover] = useState(false);
+  const { x, y } = useFollowPointer();
+
+  const bgColor = onHover ? 'rgba(255,255,255, 1)' : 'rgba(255,255,255, 0)';
   return (
-    <VStack width="40%" gap={6} alignItems="start">
-      <Text>
-        {currentEvent === `Block ${attributeSize}`
-          ? 'Latest State'
-          : currentEvent}
+    <VStack width="50%" gap={8} alignItems="start">
+      <motion.div
+        animate={{ x, y, backgroundColor: bgColor }}
+        transition={{
+          type: 'spring',
+          damping: 12,
+          stiffness: 120,
+          restDelta: 0.001,
+        }}
+        style={{
+          width: '30px',
+          height: '30px',
+          borderRadius: '1000px',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          filter: 'blur(35px)',
+          mixBlendMode: 'hard-light',
+        }}
+      />
+      <Text fontSize={24} fontWeight={600}>
+        {currentEvent === eventSize - 1
+          ? 'Latest Status'
+          : `Event #${currentEvent + 1}`}
       </Text>
-      <SimpleGrid
-        spacing={4}
-        p={2}
-        templateColumns="repeat(3, minmax(0, 1fr))"
-        flexGrow={1}
-        width={440}
-        height={280}
+      <Box
+        width={520}
+        height={300}
+        backgroundColor="transparent"
+        zIndex={100}
+        onMouseEnter={() => {
+          setOnHover(true);
+        }}
+        onMouseLeave={() => {
+          setOnHover(false);
+        }}
         overflowY="scroll"
         overflowX="hidden"
         transition="scrollbar-color 0.2s"
@@ -34,44 +62,34 @@ const DetailAttributes = ({
           scrollbarColor: `white black`,
         }}
       >
-        {Object.keys(currentState).map((dataKey) => {
-          if (dataKey === 'eventId' || dataKey === 'timestamp') return null;
-          const checked = selectedFields.includes(dataKey);
-          return (
-            <StateCard
-              key={dataKey}
-              currentState={Number(currentState[dataKey])}
-              lastState={Number(prevState[dataKey])}
-              checked={checked}
-              setSelectedFields={setSelectedFields}
-              selectedFields={selectedFields}
-              dataKey={dataKey}
-              setHover={setHover}
-              hover={hover}
-            />
-          );
-        })}
-      </SimpleGrid>
-      <Link to="game-session">
-        <Button
-          width="120px"
-          backgroundColor="white"
-          color="black"
-          _hover={{
-            backgroundColor: '#2a8aff',
-          }}
-          leftIcon={
-            <IoGameController
-              style={{
-                marginRight: '5px',
-                fontSize: '20px',
-              }}
-            />
-          }
+        <SimpleGrid
+          spacing={4}
+          p={2}
+          pt={0}
+          templateColumns="repeat(3, minmax(0, 1fr))"
+          flexGrow={1}
+          width={520}
+          height={280}
         >
-          Play
-        </Button>
-      </Link>
+          {attributes.map((attribute: string, index: any) => {
+            const checked = selectedFields.includes(
+              attribute.replace(/\s+/g, ''),
+            );
+            return (
+              <StateCard
+                key={attribute}
+                currentState={Number(currentState[index])}
+                lastState={Number(prevState[index])}
+                checked={checked}
+                setSelectedFields={setSelectedFields}
+                selectedFields={selectedFields}
+                dataKey={attribute}
+                onHover={onHover}
+              />
+            );
+          })}
+        </SimpleGrid>
+      </Box>
     </VStack>
   );
 };

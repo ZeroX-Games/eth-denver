@@ -1,6 +1,10 @@
 import { Card, CardBody, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { FaCheck } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { FaRightLong, FaArrowTrendDown, FaArrowTrendUp } from 'react-icons/fa6';
+import { useEffect } from 'react';
+import { animate, useMotionValue, useTransform, motion } from 'framer-motion';
+
+// const speed = 8;
 
 const StateCard = ({
   currentState,
@@ -9,48 +13,77 @@ const StateCard = ({
   setSelectedFields,
   selectedFields,
   dataKey,
-  setHover,
-  hover,
+  onHover,
 }: any) => {
-  const MotionVStack = motion(VStack);
-  const MotionCardBody = motion(CardBody);
+  const percentKeys = ['Win Rate', 'Critical Hit Rate', 'Productivity'];
+  const count = useMotionValue(lastState);
+  const rounded = useTransform(count, (latest) => {
+    const percent = percentKeys.includes(dataKey);
+    if (percent) {
+      return `${Math.round(latest)}%`;
+    }
+    return `${Math.round(latest)}`;
+  });
+  // const diff = currentState - lastState;
+  // const duration = Math.abs(diff) / speed;
+  useEffect(() => {
+    if (onHover) {
+      const controls = animate(count, currentState, {
+        duration: 4,
+      });
+      return controls.stop;
+    }
+    count.set(lastState);
+    return () => {};
+  }, [onHover]);
+  const hoverBorder = checked ? '2px #2a8aff solid' : '2px #404146 dashed';
+  let color = 'white';
+  if (currentState < lastState) {
+    color = '#ff4d4f';
+  } else if (currentState > lastState) {
+    color = '#52c41a';
+  }
 
   return (
     <Card
       key={dataKey}
       borderRadius={8}
       color="white"
+      cursor="pointer"
       backgroundColor="tokenBg.200"
       pt={2}
       pb={2}
-      width="120px"
-      height="120px"
+      width="150px"
+      height="140px"
       border={checked ? '2px #2a8aff solid' : '2px #21262d dashed'}
       boxShadow={
         checked
           ? '0 0 0 2px #21262d, 0 3px 8px rgba(1,4,9,0.85)'
           : '0 3px 8px rgba(1,4,9,0.85)'
       }
+      _hover={{
+        border: hoverBorder,
+      }}
       onClick={() => {
         if (checked) {
           setSelectedFields(
-            selectedFields.filter((field: any) => field !== dataKey),
+            selectedFields.filter(
+              (field: any) => field !== dataKey.replace(/\s+/g, ''),
+            ),
           );
         } else {
-          setSelectedFields([...selectedFields, dataKey]);
+          setSelectedFields([...selectedFields, dataKey.replace(/\s+/g, '')]);
         }
       }}
       // transition={{ type: 'spring', stiffness: 400, damping: 10 }}
     >
-      <MotionCardBody
+      <CardBody
         as={Flex}
         p={0}
         pb={0}
         alignItems="center"
         justifyContent="center"
         position="relative"
-        onHoverStart={() => setHover(dataKey)}
-        transition={{ duration: 0.1 }}
       >
         {checked && (
           <Flex
@@ -69,28 +102,59 @@ const StateCard = ({
           </Flex>
         )}
         <VStack gap={2}>
-          <Text fontSize={18} fontWeight={700}>
-            {dataKey}
-          </Text>
           <HStack>
-            <Text fontSize={12} fontWeight={700}>
-              {currentState}
-            </Text>
-            <Text fontSize={12} fontWeight={700}>
-              {lastState}
+            <Text fontSize={18} fontWeight={700} userSelect="none">
+              {dataKey}
             </Text>
           </HStack>
+          <HStack>
+            <Text
+              fontSize={18}
+              fontWeight={700}
+              color="#747285"
+              userSelect="none"
+            >
+              {lastState}
+              {percentKeys.includes(dataKey) && '%'}
+            </Text>
+            <FaRightLong />
+            {onHover ? (
+              <motion.div
+                style={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  userSelect: 'none',
+                }}
+              >
+                {rounded}
+              </motion.div>
+            ) : (
+              <Text fontSize={18} fontWeight={700} userSelect="none">
+                {currentState}
+                {percentKeys.includes(dataKey) && '%'}
+              </Text>
+            )}
+          </HStack>
+          {currentState - lastState !== 0 && (
+            <HStack>
+              <Text
+                fontSize={12}
+                fontWeight={700}
+                color={color}
+                userSelect="none"
+              >
+                ({currentState - lastState > 0 ? '+' : ''}
+                {currentState - lastState})
+              </Text>
+              {currentState - lastState > 0 ? (
+                <FaArrowTrendUp />
+              ) : (
+                <FaArrowTrendDown />
+              )}
+            </HStack>
+          )}
         </VStack>
-      </MotionCardBody>
-      {hover === dataKey && (
-        <MotionVStack
-          backgroundColor="rgba(255, 255, 255, 0.1)"
-          position="absolute"
-          inset={0}
-          layoutId="card"
-          boxShadow=""
-        />
-      )}
+      </CardBody>
     </Card>
   );
 };

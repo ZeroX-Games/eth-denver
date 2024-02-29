@@ -2,9 +2,9 @@ import { Image, HStack, Center, useDisclosure } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import fightLogo from '@assets/fightlogo.png';
 import { useEffect, useState } from 'react';
-import { userGifs } from '@/utilities/gifLibrary';
-import enemy from '@assets/enemy.gif';
 import koLogo from '@assets/ko.png';
+import doge from '@assets/doge.gif';
+import meebit from '@assets/meebit.gif';
 import GameOverModal from './GameOverModal';
 
 const GameLoadingScreen = () => {
@@ -12,7 +12,6 @@ const GameLoadingScreen = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [gifIndex, setGifIndex] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
@@ -20,20 +19,6 @@ const GameLoadingScreen = () => {
       if (isGameOver) {
         setIsGameOver(false);
         onOpen();
-        return;
-      }
-      if (
-        (e.key === 'a' || e.key === 'A' || e.key === 'ArrowRight') &&
-        !isOpen
-      ) {
-        setGifIndex(1);
-        return;
-      }
-      if (
-        (e.key === 'd' || e.key === 'D' || e.key === 'ArrowLeft') &&
-        !isOpen
-      ) {
-        setGifIndex(0);
         return;
       }
       if ((e.key === 'ArrowUp' || e.key === 'x' || e.key === 'X') && !isOpen) {
@@ -71,9 +56,24 @@ const GameLoadingScreen = () => {
         justifyContent="space-between"
         px={10}
       >
-        <Image src={userGifs[gifIndex]} transform="scale(0.7)" />
-        <Image src={enemy} transform="scale(0.9)" />
+        <Image
+          as={motion.img}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          src={doge}
+          height="500px"
+          width="500px"
+        />
+        <Image
+          as={motion.img}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          src={meebit}
+          height="500px"
+          width="500px"
+        />
       </HStack>
+
       {isGameOver && (
         <Center
           w="100vw"
