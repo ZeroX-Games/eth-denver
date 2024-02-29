@@ -21,18 +21,17 @@ const NavBar = () => {
       p={4}
       pl={10}
       pr={10}
-      borderBottom="1px solid #383e44"
       gap={20}
       alignItems="center"
       position="sticky"
       top={0}
-      zIndex={1000}
+      zIndex={10000}
       backgroundColor={isTop ? 'rgba(0,0,0,0)' : 'rgba(0,0,0,1)'}
       transition="background-color 0.3s ease-in-out"
       width="100%"
     >
       <HStack width="100%" justifyContent="space-between">
-        <NavTitle to="main" />
+        <NavTitle to="/" />
         <HStack gap={6}>
           <NavUser />
         </HStack>

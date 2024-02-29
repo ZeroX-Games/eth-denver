@@ -7,7 +7,7 @@ const Layout = () => {
     <Flex
       direction="column"
       fontWeight="medium"
-      backgroundColor="black"
+      backgroundColor="#121212"
       color="white"
       minHeight="100vh"
       width="100wh"

@@ -5,26 +5,34 @@ const StyledTab = ({ text }: { text: string }) => {
     <Tab
       _selected={{
         color: 'white',
-        bg: 'tokenBg.500',
-        borderTop: '1px #21262d solid',
-        borderLeft: '1px #21262d solid',
-        borderRight: '1px #21262d solid',
+        bg: '#1b1b1b',
+        border: '1px rgba(255, 255, 255, 0.12) solid',
+        borderBottom: '1px solid #1b1b1b',
       }}
       width="200px"
+      fontSize={18}
+      fontWeight={500}
+      zIndex={5000}
     >
       {text}
     </Tab>
   );
 };
 
-const DetailNavs = ({ children }: any) => {
+const DetailNavs = ({ tabIndex, setTabIndex, children }: any) => {
   return (
-    <Box width="100%" backgroundColor="black" borderRadius="lg">
-      <Tabs variant="enclosed">
+    <Box width="100%" borderRadius="lg">
+      <Tabs
+        variant="enclosed"
+        index={tabIndex}
+        onChange={(index) => {
+          setTabIndex(index);
+        }}
+      >
         <TabList justifyContent="center" gap={8} borderBottom={0}>
-          <StyledTab text="Game" />
-          <StyledTab text="Social" />
-          <StyledTab text="Card" />
+          <StyledTab text="NFT Fighter" />
+          <StyledTab text="NFT Card" />
+          <StyledTab text="NFT Town" />
         </TabList>
         {children}
       </Tabs>

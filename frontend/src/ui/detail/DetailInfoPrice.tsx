@@ -1,22 +1,21 @@
-import { HStack, Text, VStack } from '@chakra-ui/react';
+import { HStack, Text, VStack, Image } from '@chakra-ui/react';
+import { logoIcon } from '@/assets';
 
 const DetailInfoPrice = () => {
   return (
     <VStack
-      backgroundColor="tokenBg.500"
+      backgroundColor="#1b1b1b"
       alignItems="start"
       p={6}
       width="550px"
       borderRadius="lg"
       mt={4}
-      boxShadow="0 0 0 1px #21262d, 0 16px 32px rgba(1,4,9,0.85)"
+      border="1px solid rgba(255, 255, 255, 0.12)"
     >
       <Text color="subTextColor.200">Current Price</Text>
-      <HStack alignItems="end" gap={5}>
-        <Text fontSize="xx-large">127.5 ZeroX</Text>
-        <Text mb="6px" color="green.400">
-          APY: 5.3%
-        </Text>
+      <HStack alignItems="center" gap={2}>
+        <Image src={logoIcon} width="36px" height="36px" />
+        <Text fontSize="xx-large">127.5 </Text>
       </HStack>
       {/* <HStack gap={6}> */}
       {/*  <Button */}

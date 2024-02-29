@@ -3,8 +3,10 @@ import DetailImg from '@ui/detail/DetailImg';
 import DetailInfo from '@ui/detail/DetailInfo';
 import DetailNavs from '@ui/detailNav/DetailNavs';
 import DetailNavPanel from '@ui/detailNav/DetailNavPanel';
+import { useState } from 'react';
 
 const Pokemon = () => {
+  const [tabIndex, setTabIndex] = useState(0);
   return (
     <Flex>
       <VStack p={10} gap={16}>
@@ -12,7 +14,7 @@ const Pokemon = () => {
           <DetailImg />
           <DetailInfo />
         </HStack>
-        <DetailNavs>
+        <DetailNavs tabIndex={tabIndex} setTabIndex={setTabIndex}>
           <DetailNavPanel />
         </DetailNavs>
       </VStack>

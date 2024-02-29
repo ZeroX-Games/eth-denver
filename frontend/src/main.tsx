@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { SaasProvider } from '@saas-ui/react';
+import { RandomNumbersContext } from '@/utilities/context';
 
 import customTheme from '@theme/customTheme';
 import router from './router';
@@ -33,11 +34,30 @@ import './index.css';
 //   },
 // });
 
+const App = () => {
+  const [attributeChanges, setAttributeChanges] = React.useState<{}>({});
+  const [currentAttribute, setCurrentAttribute] = React.useState<{}>({});
+  const context = useMemo(
+    () => ({
+      attributeChanges,
+      setAttributeChanges,
+      currentAttribute,
+      setCurrentAttribute,
+    }),
+    [attributeChanges, currentAttribute],
+  );
+  return (
+    <RandomNumbersContext.Provider value={context}>
+      <RouterProvider router={router} />
+    </RandomNumbersContext.Provider>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={customTheme}>
       <SaasProvider>
-        <RouterProvider router={router} />
+        <App />
       </SaasProvider>
     </ChakraProvider>
   </React.StrictMode>,
