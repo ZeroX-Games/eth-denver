@@ -32,6 +32,5 @@ sketch
 .idea
 
 .env
-dist
 client
 domain-server
