@@ -25,8 +25,8 @@ const SOCIAL_ATTRIBUTES_TABLE = SOCIAL_ATTRIBUTES.map((attr) =>
 );
 
 // TODO: Fetch the collection information from the backend
-const DOMAINID = Number(import.meta.env.VITE_TOWN_DOMAINID);
-const CHAINID = Number(import.meta.env.VITE_TOWN_CHAINID);
+const DOMAINID = Number(import.meta.env.VITE_LINEA_DOMAINID);
+const CHAINID = Number(import.meta.env.VITE_LINEA_CHAINID);
 const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
 const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
 const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);
@@ -167,7 +167,12 @@ const SocialPanel = () => {
             mt="68px"
             position="relative"
           >
-            <Image src={socialspacemeebit} width="300px" height="300px" />
+            <Image
+              src={socialspacemeebit}
+              width="300px"
+              height="300px"
+              borderRadius="lg"
+            />
 
             <Tooltip hasArrow label="Base Explorer">
               <a

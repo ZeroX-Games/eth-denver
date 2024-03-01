@@ -38,7 +38,7 @@ const CardGame = () => {
         zIndex={1401}
         top="50%"
         cursor="pointer"
-        onClick={() => setImageInedx((prev) => Number(!Boolean(prev)))}
+        onClick={() => setImageInedx((prev) => Number(!prev))}
       />
     </Box>
   );

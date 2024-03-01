@@ -56,5 +56,7 @@ module.exports = {
     "react/require-default-props": "off",
     'no-console': 'off',
     'import/prefer-default-export': 'off',
+    'no-plusplus': 'off',
+
   },
 };

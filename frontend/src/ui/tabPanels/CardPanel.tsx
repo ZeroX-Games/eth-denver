@@ -25,8 +25,8 @@ const GAME_ATTRIBUTES_TABLE = CARD_ATTRIBUTES.map((attr) =>
 );
 
 // TODO: Fetch the collection information from the backend
-const DOMAINID = Number(import.meta.env.VITE_CARD_DOMAINID);
-const CHAINID = Number(import.meta.env.VITE_CARD_CHAINID);
+const DOMAINID = Number(import.meta.env.VITE_ARBI_DOMAINID);
+const CHAINID = Number(import.meta.env.VITE_ARBI_CHAINID);
 const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
 const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
 const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);

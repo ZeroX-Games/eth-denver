@@ -26,8 +26,8 @@ const GAME_ATTRIBUTES_TABLE = GAME_ATTRIBUTES.map((attr) =>
 );
 
 // TODO: Fetch the collection information from the backend
-const DOMAINID = Number(import.meta.env.VITE_FIGHTER_DOMAINID);
-const CHAINID = Number(import.meta.env.VITE_FIGHTER_CHAINID);
+const DOMAINID = Number(import.meta.env.VITE_BASE_DOMAINID);
+const CHAINID = Number(import.meta.env.VITE_BASE_CHAINID);
 const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
 const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
 const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);
@@ -91,6 +91,7 @@ const GamePanel = () => {
         const parsedData = [];
         const currentStateLength = Object.keys(currentState).length;
         const lastStatus = [];
+        // eslint-disable-next-line no-plusplus
         for (let i = 0; i < currentStateLength; i++) {
           lastStatus.push(currentState[i + 1]);
         }

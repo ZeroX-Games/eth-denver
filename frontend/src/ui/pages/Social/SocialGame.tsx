@@ -13,9 +13,7 @@ import {
 import socialBg from '@/assets/socialbg.png';
 import meebitProfileSocial from '@/assets/meebitProfileSocial.png';
 import backArrow from '@assets/backArrow.png';
-import { FaRegHeart } from 'react-icons/fa';
-import { FaTwitterSquare } from 'react-icons/fa';
-import { FaHeart } from 'react-icons/fa';
+import { FaRegHeart, FaTwitterSquare, FaHeart } from 'react-icons/fa';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
