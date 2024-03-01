@@ -214,7 +214,7 @@ const GamePanel = () => {
             onClick={() => {
               const randomUpdates = generateAttributeChanges();
               const randomUpdates2 = randomUpdates.map(
-                (number: any) => -Math.abs(number),
+                (number: number) => number * -1,
               );
 
               const attributeChange = GAME_ATTRIBUTES.reduce(

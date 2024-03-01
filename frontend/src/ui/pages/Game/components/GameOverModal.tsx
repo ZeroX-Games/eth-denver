@@ -18,6 +18,8 @@ import { useContext } from 'react';
 import { RandomNumbersContext } from '@/utilities/context';
 import { useNavigate } from 'react-router-dom';
 
+const LEFT_CURRENT_ATTRIBUTES = [42, 28, 180, 230, 98, 135, 5353];
+
 const SummaryInfoRight = ({ attributeChanges, currentAttributes }: any) => {
   return Object.keys(attributeChanges).map((key: any) => {
     const delta = Number(attributeChanges[key]);
@@ -27,7 +29,7 @@ const SummaryInfoRight = ({ attributeChanges, currentAttributes }: any) => {
     return (
       <VStack alignItems="flex-end">
         <Text display="flex" gap={2}>
-          {current}{' '}
+          {current + delta}{' '}
           {delta !== 0 && (
             <Text color={delta > 0 ? 'green' : 'red'}>{parsedDelta}</Text>
           )}
@@ -38,15 +40,16 @@ const SummaryInfoRight = ({ attributeChanges, currentAttributes }: any) => {
 };
 
 const SummaryInfoLeft = ({ attributeChanges, currentAttributes }: any) => {
-  return Object.keys(attributeChanges).map((key: any) => {
-    const delta = Number(attributeChanges[key]);
+  return Object.keys(attributeChanges).map((key: any, index: number) => {
+    const delta = Number(attributeChanges[key]) * -1;
     const current = Number(currentAttributes[key]);
+    console.log('current', current);
 
     const parsedDelta = delta > 0 ? `(+${delta})` : `(${delta})`;
     return (
       <VStack alignItems="flex-start">
         <Text display="flex" gap={2}>
-          {current}{' '}
+          {LEFT_CURRENT_ATTRIBUTES[index]}{' '}
           {delta !== 0 && (
             <Text color={delta > 0 ? 'green' : 'red'}>{parsedDelta}</Text>
           )}
