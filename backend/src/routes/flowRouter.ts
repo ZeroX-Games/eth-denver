@@ -1,50 +1,51 @@
 import { route, publicProcedure } from "../trpc";
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
-import { AppRouter } from "../routes/router";
-import { TRPCError } from "@trpc/server";
+import { getClient } from "../trpcClient";
+
 import { z } from "zod";
-import axios from "axios";
-
-
-
-const client = createTRPCProxyClient<AppRouter>({
-    links: [
-        httpBatchLink({
-            url: "http://0.0.0.0:4000/trpc",
-        }),
-    ],
-});
 
 
 export const FlowRouter = route({
     flow: publicProcedure
-        .mutation(async ({ }) => {
-            let chainID = 84532
+        .input(z.object({
+            chainID: z.number(),
+            batch: z.array(z.any()),
+        })).mutation(async ({
+            input
+        }) => {
+            const { batch, chainID } = input;
             let domainIDs: number[] = [];
-            let deltas: any[] = [];
+            let delta: any = [];
             let metadataURLs: string[] = [];
-            let { delta } = await batchUpdateTokens(1, chainID);
-            domainIDs.push(delta[0].domainId as number);
-            deltas.push(delta[0].deltas);
-            let i = 0;
-            for (delta in deltas) {
-                const gfURL = await uploadCompressedDelta(domainIDs[i], chainID, deltas[delta])
+            const client = await getClient();
+
+            for (let i = 0; i < batch.length; i++) {
+                domainIDs.push(batch[i].domainId);
+                let result = await batchUpdateTokens(client, chainID, [batch[i]])
+                console.log("Batch Update->", result)
+            }
+            for (let i = 0; i < batch.length; i++) {
+                let gfURL = await uploadCompressedDelta(client, batch[i])
                 if (gfURL?.metadataUrl) {
                     metadataURLs.push(gfURL.metadataUrl)
                 }
-                i++;
             }
-            // convert domainIDs as Integer
+
             domainIDs = domainIDs.map((id) => parseInt(id.toString(), 10))
-            // console.log(deltas)
-            const response = await sendUpdateEvent(domainIDs, metadataURLs, chainID)
-            console.log(response)
+            console.log("Domain IDs->", domainIDs)
+            const response = await sendUpdateEvent(client, domainIDs, metadataURLs, chainID)
+            console.log("Updates->", response)
+
+            return {
+                message: "Flow complete",
+            }
+
         }),
 })
 
 
-async function uploadCompressedDelta(domainId: any, chainID: any, delta: any) {
+async function uploadCompressedDelta(client: any, delta: any) {
     try {
+
         const response = await client.uploader.uploadCompressedDelta.mutate({
             deltas: delta
         });
@@ -56,7 +57,8 @@ async function uploadCompressedDelta(domainId: any, chainID: any, delta: any) {
 
 }
 
-async function sendUpdateEvent(domainIds: number[], URLs: string[], chainID: number) {
+async function sendUpdateEvent(client: any, domainIds: number[], URLs: string[], chainID: number) {
+
     const response = await client.events.sendUpdateEvent.mutate({
         domainIds,
         chainID,
@@ -65,17 +67,11 @@ async function sendUpdateEvent(domainIds: number[], URLs: string[], chainID: num
     return response
 }
 
-async function batchUpdateTokens(domainId: number, chainID: number) {
-    const delta = await axios
-        .get("http://localhost:3001/update-tokens", {
-            params: {
-                domainId,
-            },
-        })
-        .then((response) => response.data);
+async function batchUpdateTokens(client: any, chainID: number, deltas: any[]) {
+
     const response = await client.fetchEvents.fetchNewEvents.mutate({
-        deltas: delta,
+        deltas,
         chainID,
     });
-    return { delta, response };
+    return { response };
 }

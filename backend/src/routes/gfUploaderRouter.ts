@@ -23,14 +23,14 @@ export const uploaderRouter = route({
         );
 
         return {
-          message: "Product info upload completed successfully.",
-          metadataUrl: `https://gnfd-testnet-sp1.nodereal.io/view/event/eth_denver_${id}.json`,
+          message: "Event upload completed successfully.",
+          metadataUrl: `https://gnfd-testnet-sp1.bnbchain.org/view/event-denver/eth_denver_${id}.json`,
         };
       } catch (error) {
-        console.error("Error during product info upload:", error);
+        console.error("Error during event info upload:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to upload product info",
+          message: "Failed to upload event info",
         });
       }
     })

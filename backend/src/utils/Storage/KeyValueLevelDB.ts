@@ -10,12 +10,21 @@ type AttributeId = number;
 type TokenId = number;
 
 class NFTCollectionManager {
+    private static instances: Record<string, NFTCollectionManager> = {};
     private db;
     private domainId: number;
 
     constructor(path, chainID, domainId) {
         this.domainId = domainId;
         this.db = levelup(encode(leveldown(path + "/" + chainID + "/" + domainId), { valueEncoding: 'json' }));
+    }
+
+    public static getInstance(path: string, chainID: ChainID, domainId: DomainID): NFTCollectionManager {
+        const key = `${chainID}:${domainId}`;
+        if (!this.instances[key]) {
+            this.instances[key] = new NFTCollectionManager(path, chainID, domainId);
+        }
+        return this.instances[key];
     }
 
     async registerCollection(domainID: DomainID, chainID: ChainID, collectionAddress: CollectionAddress): Promise<Boolean> {
@@ -29,6 +38,7 @@ class NFTCollectionManager {
             attributeId = await this.getNextAttributeId(domainID, chainID);
             await this.db.put(`${domainID}:${chainID}:attributeName:${attributeName}`, attributeId);
         }
+        // Example: <47:421614:attributeName:strength,10>
         return attributeId;
     }
 
@@ -62,8 +72,9 @@ class NFTCollectionManager {
 
 
     async linkAttributeToCollection(domainID: DomainID, chainID: ChainID, collectionAddress: CollectionAddress, attributeId: number): Promise<void> {
-        ;
         await this.db.put(`${domainID}:${chainID}:collectionAttribute:${collectionAddress}:${attributeId}`, true);
+        // Example: <47:421614:collectionAttribute:0x1234...B2:10,true>
+        // Example: <47:421614:collectionAttribute:0x1234...B2:11,true>
     }
 
 
@@ -72,16 +83,20 @@ class NFTCollectionManager {
             const attributeIds: AttributeId[] = [];
             this.db.createReadStream({
                 gt: `${domainID}:${chainID}:collectionAttribute:${collectionAddress}:`,
-                lt: `${domainID}:${chainID}:collectionAttribute:${collectionAddress};`,
+                lt: `${domainID}:${chainID}:collectionAttribute:${collectionAddress}:~`,
             })
                 .on('data', ({ key }) => {
                     const parts = key.split(':');
-                    attributeIds.push(parseInt(parts[3], 10));
+                    const attributeId = parseInt(parts[4], 10);
+                    if (!isNaN(attributeId)) {
+                        attributeIds.push(attributeId);
+                    }
                 })
                 .on('error', (err) => reject(err))
                 .on('end', () => resolve(attributeIds));
         });
     }
+
 
     async updateTokenAttributes(domainID: DomainID, chainID: ChainID, collectionAddress: CollectionAddress, tokenId: TokenId, attributes: Array<{ attributeId: AttributeId, value: number }>): Promise<void> {
         for (const { attributeId, value } of attributes) {
@@ -139,39 +154,22 @@ class NFTCollectionManager {
         await this.db.put(`${domainID}:${chainID}:${collectionAddress}:tokenHistory:${tokenId}`, JSON.stringify(history));
     }
 
-    async getTokenHistory(domainID: DomainID, chainID: ChainID, collectionAddress: CollectionAddress, tokenId: TokenId, numberOfChanges: number): Promise<number[][]> {
+    async getTokenHistory(domainID: DomainID, chainID: ChainID, collectionAddress: CollectionAddress, tokenId: TokenId, numberOfChanges: number): Promise<{ history: number[][], historySize: number }> {
         try {
             const historyJson = await this.db.get(`${domainID}:${chainID}:${collectionAddress}:tokenHistory:${tokenId}`);
             const history = JSON.parse(historyJson);
-            return history.slice(-numberOfChanges);
+            const historySize = history.length;
+            // return historySize as well
+            return {
+                history: history.slice(-numberOfChanges),
+                historySize
+            };
         } catch (error: any) {
             if (error.notFound) {
-                return [];
-            }
-            throw error;
-        }
-    }
-
-
-    async updateEventNumber() {
-        let eventNumber = 0;
-        try {
-            eventNumber = (await this.db.get("eventNumber") as number) + 1;
-            await this.db.put("eventNumber", eventNumber);
-        } catch (error: any) {
-            if (error.notFound) {
-                await this.db.put("eventNumber", 1);
-            }
-        }
-        return eventNumber;
-    }
-
-    async getEventNumber() {
-        try {
-            return await this.db.get("eventNumber");
-        } catch (error: any) {
-            if (error.notFound) {
-                return 0;
+                return {
+                    history: [],
+                    historySize: 0
+                }
             }
             throw error;
         }

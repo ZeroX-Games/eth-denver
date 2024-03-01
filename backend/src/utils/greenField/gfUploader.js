@@ -9,10 +9,10 @@ const path = require("path");
 
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
-const ACCOUNT_ADDRESS = process.env.ACCOUNT_ADDRESS;
-const ACCOUNT_PRIVATEKEY = process.env.ACCOUNT_PRIVATEKEY;
+const ACCOUNT_ADDRESS = process.env.ZEROX_NODE_ACCOUNT_ADDRESS;
+const ACCOUNT_PRIVATEKEY = process.env.ZEROX_NODE_ACCOUNT_PRIVATEKEY;
 
-const eventBucketName = "event";
+const eventBucketName = "event-denver";
 
 async function createBucket(bucketName, creator, privateKey) {
   const spInfo = await selectSp();

@@ -3,6 +3,29 @@ import { TRPCError } from "@trpc/server";
 import NFTCollectionManager from "../utils/Storage/KeyValueLevelDB";
 import { z } from "zod";
 
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function accessDatabaseWithRetry(operation, maxRetries = 5, retryDelay = 1000) {
+    let attempt = 0;
+    while (attempt < maxRetries) {
+        try {
+            return await operation();
+        } catch (error) {
+            if ((error as Error).message.includes('LOCK: already held by process')) {
+                console.log(`Database lock detected, retrying after ${retryDelay}ms...`);
+                await delay(retryDelay);
+                attempt++;
+            } else {
+                throw error;
+            }
+        }
+    }
+    throw new Error('Failed to access the database after multiple retries.');
+}
+
 export const fetchEventsRouter = route({
     fetchNewEvents: publicProcedure
         .input(z.object({
@@ -12,50 +35,43 @@ export const fetchEventsRouter = route({
             try {
                 const { deltas, chainID } = input;
                 const domainID = deltas[0].domainId;
-                const manager = new NFTCollectionManager("../DB", chainID, domainID);
+                const manager = NFTCollectionManager.getInstance("../DB", chainID.toString(), domainID.toString());
                 let attributes: any = [];
+                for (let i = 0; i < deltas.length; i++) {
+                    // Use the retry mechanism for getting collection attributes
+                    attributes = await accessDatabaseWithRetry(() =>
+                        manager.getCollectionAttributes(domainID.toString(), chainID.toString(), deltas[i].deltas[0].collectionAddr.toString())
+                    );
 
-                attributes = [
-                    await manager.getAttributeId(domainID, chainID.toString(), "HP"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "MP"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "EXP"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "ATK"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "DEF"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "SKIN"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "STRENGTH"),
-                    await manager.getAttributeId(domainID, chainID.toString(), "SPEED"),
-                ];
-
-                if (attributes.includes(null)) {
-                    attributes = [
-                        await manager.registerAttribute(domainID, chainID.toString(), "HP"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "MP"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "EXP"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "ATK"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "DEF"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "SKIN"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "STRENGTH"),
-                        await manager.registerAttribute(domainID, chainID.toString(), "SPEED")
-                    ];
-
+                    // Assuming updateOrAddTokenAttributes might also access the database
+                    await accessDatabaseWithRetry(() =>
+                        updateOrAddTokenAttributes(manager, chainID, [deltas[i]], attributes)
+                    );
                 }
 
-                const numberOfUpdates = await updateOrAddTokenAttributes(manager, chainID, deltas, attributes).then((values) => {
-                }).catch((error) => {
-                    console.log("Error: ", error);
-                })
-                await manager.closeDb();
+                process.on('SIGINT', async () => {
+                    console.log('Received SIGINT. Closing database connection.');
+                    await manager.closeDb();
+                    process.exit(0);
+                });
+
+                process.on('SIGTERM', async () => {
+                    console.log('Received SIGTERM. Closing database connection.');
+                    await manager.closeDb();
+                    process.exit(0);
+                });
+
                 return {
-                    message: `NFT metadata upload completed successfully. ${numberOfUpdates}`,
-                    numberOfUpdates: numberOfUpdates,
+                    message: `NFT metadata upload completed successfully.`,
                 }
 
             } catch (error) {
+                console.error("Failed operation:", error);
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Transaction failed', cause: error });
-
             }
         }),
-})
+});
+
 
 async function updateOrAddTokenAttributes(manager, chainID, delta, attributes) {
     let counter = 0;
