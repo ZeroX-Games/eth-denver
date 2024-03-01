@@ -29,4 +29,39 @@ function generateAttributeChanges() {
 // const attributeChanges = generateAttributeChanges();
 // console.log(attributeChanges);
 
-export { generateAttributeChanges };
+function generateAttributeChangesCard() {
+  // games
+  const gameUpdate = 1;
+
+  // Generate Win Rate update with its original range
+  const winRateUpdate = getRandomInt(-10, 10);
+
+  // HP will always be 0, as specified
+  const hpUpdate = getRandomInt(-1, 2);
+
+  // Generate Attack and Defense updates within their specified range [1, 5]
+  const attackUpdate = getRandomInt(0, 1);
+  const defenseUpdate = getRandomInt(0, 1);
+
+  // Generate Likes update within the specified range [10, 40]
+  const likesUpdate = getRandomInt(0, 20);
+
+  // Ensure League Points (if included) or any other attribute matching Win Rate's sign follows the same logic
+  // For this scenario, we are not including League Points but focusing on the new attributes provided
+
+  // Return the array of updates
+  return [
+    gameUpdate,
+    winRateUpdate,
+    hpUpdate,
+    attackUpdate,
+    defenseUpdate,
+    likesUpdate,
+  ];
+}
+
+// Example usage
+const attributeChanges = generateAttributeChanges();
+console.log(attributeChanges);
+
+export { generateAttributeChanges, generateAttributeChangesCard };

@@ -3,10 +3,11 @@ import DetailImg from '@ui/detail/DetailImg';
 import DetailInfo from '@ui/detail/DetailInfo';
 import DetailNavs from '@ui/detailNav/DetailNavs';
 import DetailNavPanel from '@ui/detailNav/DetailNavPanel';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { RandomNumbersContext } from '@/utilities/context';
 
 const Pokemon = () => {
-  const [tabIndex, setTabIndex] = useState(0);
+  const globalContext = useContext(RandomNumbersContext);
   return (
     <Flex>
       <VStack p={10} gap={16}>
@@ -14,7 +15,10 @@ const Pokemon = () => {
           <DetailImg />
           <DetailInfo />
         </HStack>
-        <DetailNavs tabIndex={tabIndex} setTabIndex={setTabIndex}>
+        <DetailNavs
+          tabIndex={globalContext.currentTab}
+          setTabIndex={globalContext.setCurrentTab}
+        >
           <DetailNavPanel />
         </DetailNavs>
       </VStack>

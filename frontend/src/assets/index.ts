@@ -14,7 +14,8 @@ import nftimage from './nftimage.png';
 import nftDance from './dancer2-unscreen.gif';
 import nftCard from './nftCard.png';
 import arbitrumIcon from './arbitrum.png';
-import lineaIcon from './LogomarkBlack.png';
+import lineaIcon from './Logomark.png';
+import socialspacemeebit from './socialspacemeebit.png';
 
 export {
   pichuDetail,
@@ -34,4 +35,5 @@ export {
   nftCard,
   arbitrumIcon,
   lineaIcon,
+  socialspacemeebit,
 };

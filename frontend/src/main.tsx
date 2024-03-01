@@ -36,15 +36,18 @@ import './index.css';
 
 const App = () => {
   const [attributeChanges, setAttributeChanges] = React.useState<{}>({});
-  const [currentAttribute, setCurrentAttribute] = React.useState<{}>({});
+  const [currentAttributes, setCurrentAttributes] = React.useState<{}>({});
+  const [currentTab, setCurrentTab] = React.useState<number>(0);
   const context = useMemo(
     () => ({
       attributeChanges,
       setAttributeChanges,
-      currentAttribute,
-      setCurrentAttribute,
+      currentAttributes,
+      setCurrentAttributes,
+      currentTab,
+      setCurrentTab,
     }),
-    [attributeChanges, currentAttribute],
+    [attributeChanges, currentAttributes, currentTab],
   );
   return (
     <RandomNumbersContext.Provider value={context}>

@@ -20,37 +20,26 @@ const GAME_ATTRIBUTES = [
   'Likes',
 ];
 
-const GAME_ATTRIBUTES_TABLE = [
-  'WinRate',
-  'CriticalHitRate',
-  'LeaguePoints',
-  'Games',
-  'Proficiency',
-  'TrainingHours',
-  'Likes',
-];
-
-// const GameResponseData = [
-//   [60, 12, 104, 130, 140, 207, 100],
-//   [75, 22, 90, 131, 143, 210, 103],
-//   [76, 24, 112, 132, 146, 212, 107],
-//   [70, 26, 129, 133, 149, 213, 111],
-//   [66, 30, 130, 134, 154, 214, 114],
-//   [63, 45, 101, 135, 156, 217, 118],
-//   [70, 32, 122, 136, 158, 220, 120],
-//   [80, 40, 150, 137, 165, 224, 120],
-//   [81, 42, 151, 138, 172, 226, 120],
-//   [78, 50, 142, 139, 176, 229, 120],
-// ];
-
-const fetchUrl =
-  'https://5732-207-194-2-34.ngrok-free.app/trpc/fetchNFTValuesRouter.fetchNFTValues';
+// remove spaces from the attributes
+const GAME_ATTRIBUTES_TABLE = GAME_ATTRIBUTES.map((attr) =>
+  attr.replace(/ /g, ''),
+);
 
 // TODO: Fetch the collection information from the backend
-const DOMAINID = 16;
-const CHAINID = 84532;
-const COLLECTIONADDR = '0xED5AF388653567Af2F388E6224dC7C4b3241C544';
-const TOKENID = 172;
+const DOMAINID = Number(import.meta.env.VITE_FIGHTER_DOMAINID);
+const CHAINID = Number(import.meta.env.VITE_FIGHTER_CHAINID);
+const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
+const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
+const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);
+
+const API_BASE = import.meta.env.VITE_API_BASE;
+const API_PORT = import.meta.env.VITE_API_PORT;
+
+const fetchUrl = `${API_BASE}:${API_PORT}/trpc/fetchNFTValuesRouter.fetchNFTValues`;
+const postUrl = `${API_BASE}:${API_PORT}/trpc/flow.flow`;
+
+console.log('fetchUrl', fetchUrl);
+console.log('postUrl', postUrl);
 
 const GamePanel = () => {
   const globalRandomNumber = useContext(RandomNumbersContext);
@@ -63,6 +52,7 @@ const GamePanel = () => {
   const [stateByEvent, setStateByEvent] = useState<any>(null);
   const [prevStateByEvent, setPrevStateByEvent] = useState<any>(null);
   const [realData, setRealData] = useState<any>(null);
+  const [totalLength, setTotalLength] = useState<number>(0);
   const navigate = useNavigate();
   useEffect(() => {
     if (realData) {
@@ -91,37 +81,27 @@ const GamePanel = () => {
           domainId: DOMAINID,
           chainID: CHAINID,
           collectionAddr: COLLECTIONADDR,
-          tokenIds: [TOKENID],
-          attribute: [
-            'total games',
-            'wins',
-            'league points',
-            'proficiency',
-            'training hours',
-            'critical hit rate',
-            'likes',
-          ],
+          tokenIds: [TOKENID1],
+          attribute: GAME_ATTRIBUTES,
           numberOfHisotry: 10,
         });
 
-        const currentState = res.data.result.data.tokenValues[TOKENID];
+        const currentState = res.data.result.data.tokenValues[TOKENID1];
         const updates = res.data.result.data.tokenHistory[0].history;
         const parsedData = [];
-        const lastStatus = [
-          currentState[1],
-          currentState[2],
-          currentState[3],
-          currentState[4],
-          currentState[5],
-          currentState[6],
-          currentState[7],
-        ];
+        const currentStateLength = Object.keys(currentState).length;
+        const lastStatus = [];
+        for (let i = 0; i < currentStateLength; i++) {
+          lastStatus.push(currentState[i + 1]);
+        }
+        // const lastStatus = currentState.slice(1);
         parsedData.push(lastStatus);
+        console.log('parsedData', parsedData);
         let current = lastStatus;
         // eslint-disable-next-line no-plusplus
         for (let i = updates.length - 1; i >= 0; i--) {
           const currentUpdate = updates[i];
-          const last = current.map((value, index) => {
+          const last = current.map((value: any, index: any) => {
             return value - currentUpdate[index];
           });
           current = last;
@@ -129,6 +109,7 @@ const GamePanel = () => {
         }
         parsedData.pop();
         parsedData.reverse();
+        setTotalLength(res.data.result.data.tokenHistory[0].historySize);
         setRealData(parsedData);
       } catch (error) {
         console.log(error);
@@ -140,24 +121,30 @@ const GamePanel = () => {
     fetchData();
   }, []);
 
-  const postUpdate = (updateMatrix: any) => {
-    const res = axios.post(
-      'https://5732-207-194-2-34.ngrok-free.app/trpc/flow.flow',
-      {
-        chainID: CHAINID,
-        deltas: [
-          {
-            domainId: `${DOMAINID}`,
-            deltas: [
-              {
-                collectionAddr: COLLECTIONADDR,
-                matrix: [[172, ...updateMatrix]],
-              },
-            ],
-          },
-        ],
-      },
-    );
+  const postUpdate = (updateMatrixToken1: any, updateMatrixToken2: any) => {
+    const res = axios.post(postUrl, {
+      chainID: CHAINID,
+      batch: [
+        {
+          domainId: DOMAINID,
+          deltas: [
+            {
+              collectionAddr: COLLECTIONADDR,
+              matrix: [[TOKENID1, ...updateMatrixToken1]],
+            },
+          ],
+        },
+        {
+          domainId: DOMAINID,
+          deltas: [
+            {
+              collectionAddr: COLLECTIONADDR,
+              matrix: [[TOKENID2, ...updateMatrixToken2]],
+            },
+          ],
+        },
+      ],
+    });
     console.log(res);
   };
   return (
@@ -174,7 +161,7 @@ const GamePanel = () => {
             height="300px"
             justifyContent="center"
             alignItems="center"
-            backgroundColor="#121212"
+            backgroundColor="#3A26B5"
             // backgroundColor="#3A3A3A"
             borderRadius="lg"
             border="1px solid rgba(255, 255, 255, 0.12)"
@@ -210,6 +197,7 @@ const GamePanel = () => {
               prevState={prevStateByEvent}
               attributes={GAME_ATTRIBUTES}
               eventSize={realData.length}
+              totalLength={totalLength}
             />
           )}
         </HStack>
@@ -224,6 +212,10 @@ const GamePanel = () => {
             cursor="pointer"
             onClick={() => {
               const randomUpdates = generateAttributeChanges();
+              const randomUpdates2 = randomUpdates.map(
+                (number: any) => -Math.abs(number),
+              );
+
               const attributeChange = GAME_ATTRIBUTES.reduce(
                 (obj: any, key, index) => {
                   // eslint-disable-next-line no-param-reassign
@@ -232,20 +224,19 @@ const GamePanel = () => {
                 },
                 {},
               );
+              console.log(realData[realData.length - 1]);
               const currentAttributes = GAME_ATTRIBUTES.reduce(
                 (obj: any, key, index) => {
                   // eslint-disable-next-line no-param-reassign
-                  obj[key] = realData[-1][index];
+                  obj[key] = realData[realData.length - 1][index];
                   return obj;
                 },
                 {},
               );
               globalRandomNumber.setAttributeChanges(attributeChange);
               globalRandomNumber.setCurrentAttributes(currentAttributes);
-              console.log('randomUpdates', currentAttributes);
-              console.log('randomUpdates', attributeChange);
-              postUpdate(generateAttributeChanges());
-              navigate('/game-session');
+              postUpdate(randomUpdates, randomUpdates2);
+              navigate('/game-session/fighter');
             }}
           />
           {/* </Link> */}
@@ -256,6 +247,7 @@ const GamePanel = () => {
             setCurrentEvent={setCurrentEvent}
             data={realData}
             attributes={GAME_ATTRIBUTES_TABLE}
+            totalLength={totalLength}
           />
         )}
 
