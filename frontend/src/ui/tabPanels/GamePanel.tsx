@@ -31,6 +31,7 @@ const CHAINID = Number(import.meta.env.VITE_BASE_CHAINID);
 const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
 const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
 const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);
+const BASE_EXPLORER = import.meta.env.VITE_BASE_EXPLORER;
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PORT = import.meta.env.VITE_API_PORT;
@@ -171,10 +172,10 @@ const GamePanel = () => {
           >
             <Image src={nftDance} width="200px" height="200px" />
 
-            <Tooltip hasArrow label="Base Explorer">
+            <Tooltip hasArrow label="Base Sepolia Explorer">
               <a
                 rel="noopener noreferrer"
-                href="https://basescan.org/"
+                href={BASE_EXPLORER}
                 target="_blank"
                 style={{
                   position: 'absolute',

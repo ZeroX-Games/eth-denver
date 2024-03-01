@@ -16,6 +16,7 @@ import nftCard from './nftCard.png';
 import arbitrumIcon from './arbitrum.png';
 import lineaIcon from './Logomark.png';
 import socialspacemeebit from './socialspacemeebit.png';
+import meebitIcon from './meebitIcon.png';
 
 export {
   pichuDetail,
@@ -36,4 +37,5 @@ export {
   arbitrumIcon,
   lineaIcon,
   socialspacemeebit,
+  meebitIcon,
 };

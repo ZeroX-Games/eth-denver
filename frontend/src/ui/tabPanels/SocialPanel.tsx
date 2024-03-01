@@ -30,6 +30,7 @@ const CHAINID = Number(import.meta.env.VITE_LINEA_CHAINID);
 const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
 const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
 const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);
+const LINEA_EXPLORER = import.meta.env.VITE_LINEA_EXPLORER;
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PORT = import.meta.env.VITE_API_PORT;
@@ -174,10 +175,10 @@ const SocialPanel = () => {
               borderRadius="lg"
             />
 
-            <Tooltip hasArrow label="Base Explorer">
+            <Tooltip hasArrow label="Linea Goerli Explorer">
               <a
                 rel="noopener noreferrer"
-                href="https://basescan.org/"
+                href={LINEA_EXPLORER}
                 target="_blank"
                 style={{
                   position: 'absolute',

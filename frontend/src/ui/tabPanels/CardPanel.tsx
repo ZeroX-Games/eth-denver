@@ -30,6 +30,7 @@ const CHAINID = Number(import.meta.env.VITE_ARBI_CHAINID);
 const COLLECTIONADDR = import.meta.env.VITE_COLLECTIONADDR;
 const TOKENID1 = Number(import.meta.env.VITE_TOKENID1);
 const TOKENID2 = Number(import.meta.env.VITE_TOKENID2);
+const ARBI_EXPLORER = import.meta.env.VITE_ARBI_EXPLORER;
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PORT = import.meta.env.VITE_API_PORT;
@@ -167,10 +168,10 @@ const CardPanel = () => {
           >
             <Image src={nftCard} width="200px" height="270px" />
 
-            <Tooltip hasArrow label="Base Explorer">
+            <Tooltip hasArrow label="Arbitrum Sepolia Explorer">
               <a
                 rel="noopener noreferrer"
-                href="https://basescan.org/"
+                href={ARBI_EXPLORER}
                 target="_blank"
                 style={{
                   position: 'absolute',
