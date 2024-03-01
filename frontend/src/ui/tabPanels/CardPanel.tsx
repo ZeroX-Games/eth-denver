@@ -222,15 +222,19 @@ const CardPanel = () => {
                 },
                 {},
               );
-              console.log(realData[realData.length - 1]);
-              const currentAttributes = CARD_ATTRIBUTES.reduce(
-                (obj: any, key, index) => {
-                  // eslint-disable-next-line no-param-reassign
-                  obj[key] = realData[realData.length - 1][index];
-                  return obj;
-                },
-                {},
-              );
+              let currentAttributes;
+              if (realData) {
+                currentAttributes = CARD_ATTRIBUTES.reduce(
+                  (obj: any, key, index) => {
+                    // eslint-disable-next-line no-param-reassign
+                    obj[key] = realData[realData.length - 1][index];
+                    return obj;
+                  },
+                  {},
+                );
+              } else {
+                currentAttributes = attributeChange;
+              }
               globalRandomNumber.setAttributeChanges(attributeChange);
               globalRandomNumber.setCurrentAttributes(currentAttributes);
               postUpdate(randomUpdates, randomUpdates2);

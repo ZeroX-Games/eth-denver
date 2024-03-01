@@ -5,7 +5,7 @@ import StatusHistory from '@ui/chart/StatusHistory';
 import StyledPanel from '@ui/tabPanels/StyledPanel';
 import { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { generateAttributeChangesCard } from '@/utilities/getRandomUpdate';
+import { generateAttributeChangesSocial } from '@/utilities/getRandomUpdate';
 import { useNavigate } from 'react-router-dom';
 import { RandomNumbersContext } from '@/utilities/context';
 
@@ -221,7 +221,7 @@ const SocialPanel = () => {
             height="60px"
             cursor="pointer"
             onClick={() => {
-              const randomUpdates = generateAttributeChangesCard();
+              const randomUpdates = generateAttributeChangesSocial();
               const randomUpdates2 = randomUpdates.map(
                 (number: any) => -Math.abs(number),
               );
@@ -234,15 +234,24 @@ const SocialPanel = () => {
                 },
                 {},
               );
-              console.log(realData[realData.length - 1]);
-              const currentAttributes = SOCIAL_ATTRIBUTES.reduce(
-                (obj: any, key, index) => {
-                  // eslint-disable-next-line no-param-reassign
-                  obj[key] = realData[realData.length - 1][index];
-                  return obj;
-                },
-                {},
-              );
+              let currentAttributes;
+              console.log(realData);
+              if (
+                realData &&
+                realData instanceof Array &&
+                realData.length > 0
+              ) {
+                currentAttributes = SOCIAL_ATTRIBUTES.reduce(
+                  (obj: any, key, index) => {
+                    // eslint-disable-next-line no-param-reassign
+                    obj[key] = realData[realData.length - 1][index];
+                    return obj;
+                  },
+                  {},
+                );
+              } else {
+                currentAttributes = attributeChange;
+              }
               globalRandomNumber.setAttributeChanges(attributeChange);
               globalRandomNumber.setCurrentAttributes(currentAttributes);
               postUpdate(randomUpdates, randomUpdates2);

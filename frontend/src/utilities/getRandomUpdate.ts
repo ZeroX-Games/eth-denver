@@ -60,8 +60,42 @@ function generateAttributeChangesCard() {
   ];
 }
 
-// Example usage
-const attributeChanges = generateAttributeChanges();
-console.log(attributeChanges);
+function generateAttributeChangesSocial() {
+  // likes
+  const likesUpdate = getRandomInt(0, 15);
 
-export { generateAttributeChanges, generateAttributeChangesCard };
+  // Generate Level update
+  const levelUpdate = getRandomInt(0, 5);
+
+  // Generate Badges update
+  const badgesUpdate = getRandomInt(0, 5);
+
+  // Generate Championships update
+  const championshipsUpdate = getRandomInt(0, 5);
+
+  // Generate Pokedex update
+  const pokedexUpdate = getRandomInt(0, 20);
+
+  // Generate Charm update
+  const charmUpdate = getRandomInt(0, 15);
+
+  // Return the array of updates
+  return [
+    likesUpdate,
+    levelUpdate,
+    badgesUpdate,
+    championshipsUpdate,
+    pokedexUpdate,
+    charmUpdate,
+  ];
+}
+
+// Example usage
+// const attributeChanges = generateAttributeChanges();
+// console.log(attributeChanges);
+
+export {
+  generateAttributeChanges,
+  generateAttributeChangesCard,
+  generateAttributeChangesSocial,
+};
