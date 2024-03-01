@@ -16,6 +16,12 @@ const StateCard = ({
   onHover,
 }: any) => {
   const percentKeys = ['Win Rate', 'Critical Hit Rate', 'Productivity'];
+  let latestPercent;
+  if (percentKeys.includes(dataKey)) {
+    latestPercent = `${currentState}%`;
+  } else {
+    latestPercent = `${currentState}`;
+  }
   const count = useMotionValue(lastState);
   const rounded = useTransform(count, (latest) => {
     const percent = percentKeys.includes(dataKey);
@@ -24,6 +30,7 @@ const StateCard = ({
     }
     return `${Math.round(latest)}`;
   });
+  console.log(rounded);
   // const diff = currentState - lastState;
   // const duration = Math.abs(diff) / speed;
   useEffect(() => {
@@ -126,7 +133,7 @@ const StateCard = ({
                   userSelect: 'none',
                 }}
               >
-                {rounded}
+                {latestPercent}
               </motion.div>
             ) : (
               <Text fontSize={18} fontWeight={700} userSelect="none">
