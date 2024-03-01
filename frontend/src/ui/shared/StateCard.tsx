@@ -1,8 +1,7 @@
 import { Card, CardBody, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { FaCheck } from 'react-icons/fa';
 import { FaRightLong, FaArrowTrendDown, FaArrowTrendUp } from 'react-icons/fa6';
-import { useEffect } from 'react';
-import { animate, useMotionValue, useTransform, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // const speed = 8;
 
@@ -22,27 +21,7 @@ const StateCard = ({
   } else {
     latestPercent = `${currentState}`;
   }
-  const count = useMotionValue(lastState);
-  const rounded = useTransform(count, (latest) => {
-    const percent = percentKeys.includes(dataKey);
-    if (percent) {
-      return `${Math.round(latest)}%`;
-    }
-    return `${Math.round(latest)}`;
-  });
-  console.log(rounded);
-  // const diff = currentState - lastState;
-  // const duration = Math.abs(diff) / speed;
-  useEffect(() => {
-    if (onHover) {
-      const controls = animate(count, currentState, {
-        duration: 4,
-      });
-      return controls.stop;
-    }
-    count.set(lastState);
-    return () => {};
-  }, [onHover]);
+
   const hoverBorder = checked ? '2px #2a8aff solid' : '2px #404146 dashed';
   let color = 'white';
   if (currentState < lastState) {
