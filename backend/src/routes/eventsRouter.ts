@@ -39,7 +39,7 @@ export const eventsRouter = route({
         contractAddr = process.env.CONTRACT_ADDRESS_ARB_SEP || "";
       } else if (chainID === 59140) {
         provider = new ethers.providers.JsonRpcProvider(
-          process.env.LINEA_GEORLI_NODE_RPC_URL
+          process.env.LINEA_GOERLI_NODE_RPC_URL
         );
         contractAddr = process.env.CONTRACT_ADDRESS_LIN_GOE || "";
       } else {

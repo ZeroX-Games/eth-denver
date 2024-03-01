@@ -75,7 +75,7 @@ async function registerCollectionGame(domainId: number, chainID: number) {
 }
 ```
 
-You can change the attributes, collection address, and even your chain id. The default chain IDs are base sepolia, arb sepolia, and Linea georli.
+You can change the attributes, collection address, and even your chain id. The default chain IDs are base sepolia, arb sepolia, and Linea Goerli.
 
 _please pay attention to send the correct chain id while you are sending an update!_
 
@@ -213,7 +213,7 @@ JSON SAMPLE BODY
 | ETH Sepolia  | 11155111 |
 | ARB Sepolia  | 421614   |
 | Base Sepolia | 84532    |
-| Linea Georli | 59140    |
+| Linea Goerli | 59140    |
 
 #### Sample .env Files:
 
@@ -245,6 +245,6 @@ BASE_SEPOLIA_NODE_RPC_URL=https://base-sepolia.g.alchemy.com/v2/2sSh6AsAfOBkKSpb
 CONTRACT_ADDRESS_BASE_SEP=0x0Be007e586bDba3EB6Da9f9a52A7ebaB76ca2B5c
 
 
-LINEA_GEORLI_NODE_RPC_URL=https://linea-goerli.infura.io/v3/e190d575b5e44f5581399288ee757c9e
+LINEA_GOERLI_NODE_RPC_URL=https://linea-goerli.infura.io/v3/e190d575b5e44f5581399288ee757c9e
 CONTRACT_ADDRESS_LIN_GOE=0xc0013C4c1C76a267c605aE04Be0553101e51d9da
 ```
