@@ -7,6 +7,7 @@ const StatusHistory = ({
   setCurrentEvent,
   data,
   attributes,
+  totalLength,
 }: any) => {
   const shownDataMap = data.map((row: any, index: any) => {
     const tempObjs = attributes.map((attribute: string, i: number) => {
@@ -19,21 +20,35 @@ const StatusHistory = ({
       acc[key] = obj[key]; // Assign the value of this key to the accumulated object
       return acc;
     }, {});
+    let currentIndex;
+    if (totalLength <= 10) {
+      currentIndex = index;
+    } else {
+      currentIndex = totalLength - 10 + index;
+    }
     return {
-      eventId: `Event ${index + 1}`,
+      eventId: `Event ${currentIndex + 1}`,
       ...convertedObject,
     };
   });
 
   const ref = useRef<any>(null);
   const colors: any = {
-    Games: 'red',
+    Games: '#314ea4',
     WinRate: 'yellow',
     Proficiency: 'purple',
     LeaguePoints: 'cyan',
     TrainingHours: 'blue',
     CriticalHitRate: 'pink',
     Likes: 'yellow',
+    HP: '#FF4500',
+    Attack: 'green',
+    Defense: 'blue',
+    Level: '#4db6ac',
+    Badages: '#FF4500',
+    Championships: '#23abd5',
+    Pokedex: '#15bb0c',
+    Charm: '#FF69B4',
   };
   const selectedColors = selectedFields.map((field: string) => {
     return colors[field.replace(/\s+/g, '')];
@@ -61,7 +76,12 @@ const StatusHistory = ({
           const currentEventStr =
             ref.current?.querySelector('.chakra-text').textContent;
           const currentEventId = parseInt(currentEventStr.split(' ')[1], 10);
-          setCurrentEvent(currentEventId - 1);
+          if (totalLength > 10) {
+            console.log(currentEventId - (totalLength - 10) - 1);
+            setCurrentEvent(currentEventId - (totalLength - 10) - 1);
+          } else {
+            setCurrentEvent(currentEventId - 1);
+          }
         }}
         zIndex={100}
       >

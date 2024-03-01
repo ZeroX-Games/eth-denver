@@ -18,6 +18,44 @@ import { useContext } from 'react';
 import { RandomNumbersContext } from '@/utilities/context';
 import { useNavigate } from 'react-router-dom';
 
+const SummaryInfoRight = ({ attributeChanges, currentAttributes }: any) => {
+  return Object.keys(attributeChanges).map((key: any) => {
+    const delta = Number(attributeChanges[key]);
+    const current = Number(currentAttributes[key]);
+
+    const parsedDelta = delta > 0 ? `(+${delta})` : `(${delta})`;
+    return (
+      <VStack alignItems="flex-end">
+        <Text display="flex" gap={2}>
+          {current}{' '}
+          {delta !== 0 && (
+            <Text color={delta > 0 ? 'green' : 'red'}>{parsedDelta}</Text>
+          )}
+        </Text>
+      </VStack>
+    );
+  });
+};
+
+const SummaryInfoLeft = ({ attributeChanges, currentAttributes }: any) => {
+  return Object.keys(attributeChanges).map((key: any) => {
+    const delta = Number(attributeChanges[key]);
+    const current = Number(currentAttributes[key]);
+
+    const parsedDelta = delta > 0 ? `(+${delta})` : `(${delta})`;
+    return (
+      <VStack alignItems="flex-start">
+        <Text display="flex" gap={2}>
+          {current}{' '}
+          {delta !== 0 && (
+            <Text color={delta > 0 ? 'green' : 'red'}>{parsedDelta}</Text>
+          )}
+        </Text>
+      </VStack>
+    );
+  });
+};
+
 const GameOverModal = ({ isOpen, onClose }: any) => {
   const globalRandomNumber = useContext(RandomNumbersContext);
   console.log('globalRandomNumber', globalRandomNumber);
@@ -31,52 +69,33 @@ const GameOverModal = ({ isOpen, onClose }: any) => {
         </ModalHeader>
         <ModalBody>
           <HStack alignItems="strech" color="white">
-            <VStack gap={4} alignItems="flex-start" flex={1}>
+            <VStack gap={1} alignItems="flex-start" flex={1}>
               <VStack gap={2} alignItems="flex-start">
                 <Image src={doge} />
                 <Text>Doge</Text>
                 <Text color="whiteAlpha.700">relinquished.eth</Text>
               </VStack>
 
-              <VStack alignItems="flex-start">
-                <Text display="flex" gap={2}>
-                  12138 <Text color="green">(+1)</Text>
-                </Text>
-                <Text>2410</Text>
-                <Text display="flex" gap={2}>
-                  13281 <Text color="red">(-12)</Text>
-                </Text>
-                <Text display="flex" gap={2}>
-                  2322 <Text color="green">(+2)</Text>
-                </Text>
-              </VStack>
+              <SummaryInfoLeft
+                attributeChanges={globalRandomNumber.attributeChanges}
+                currentAttributes={globalRandomNumber.currentAttributes}
+              />
             </VStack>
             <VStack justifyContent="flex-end" flex={1}>
-              <Text>Total Games</Text>
-              <Text>Wins</Text>
-              <Text>League Points</Text>
-              <Text>Proficiency</Text>
+              {Object.keys(globalRandomNumber.attributeChanges).map((key) => {
+                return <Text>{key}</Text>;
+              })}
             </VStack>
-            <VStack flex={1} justifyContent="flex-end">
+            <VStack flex={1} justifyContent="flex-end" alignItems="flex-end">
               <VStack gap={2} alignItems="flex-end">
                 <Image src={meebitProfile} />
                 <Text>Meebit</Text>
                 <Text color="whiteAlpha.700">gold.eth</Text>
               </VStack>
-              <VStack alignItems="flex-end" w="100%">
-                <Text display="flex" gap={2}>
-                  12138 <Text color="green">(+1)</Text>
-                </Text>
-                <Text display="flex" gap={2}>
-                  4318 <Text color="green">(+1)</Text>
-                </Text>
-                <Text display="flex" gap={2}>
-                  14210 <Text color="green">(+10)</Text>
-                </Text>
-                <Text display="flex" gap={2}>
-                  2210 <Text color="green">(+8)</Text>
-                </Text>
-              </VStack>
+              <SummaryInfoRight
+                attributeChanges={globalRandomNumber.attributeChanges}
+                currentAttributes={globalRandomNumber.currentAttributes}
+              />
             </VStack>
           </HStack>
         </ModalBody>

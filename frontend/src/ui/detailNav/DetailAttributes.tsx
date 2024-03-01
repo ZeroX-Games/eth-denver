@@ -13,10 +13,18 @@ const DetailAttributes = ({
   prevState,
   attributes,
   eventSize,
+  totalLength,
 }: any) => {
   const [onHover, setOnHover] = useState(false);
   const { x, y } = useFollowPointer();
-
+  let eventIdText;
+  if (currentEvent === eventSize - 1) {
+    eventIdText = 'Latest Status';
+  } else if (totalLength <= 10) {
+    eventIdText = `Event #${currentEvent + 1}`;
+  } else {
+    eventIdText = `Event #${totalLength - 10 + currentEvent + 1}`;
+  }
   const bgColor = onHover ? 'rgba(255,255,255, 1)' : 'rgba(255,255,255, 0)';
   return (
     <VStack width="50%" gap={8} alignItems="start">
@@ -40,9 +48,7 @@ const DetailAttributes = ({
         }}
       />
       <Text fontSize={24} fontWeight={600}>
-        {currentEvent === eventSize - 1
-          ? 'Latest Status'
-          : `Event #${currentEvent + 1}`}
+        {eventIdText}
       </Text>
       <Box
         width={520}
