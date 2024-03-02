@@ -1,3 +1,5 @@
+# ZeroX Arcade Backend
+
 ### Installing depencencies:
 
 #### Note: Node version that is compatible with this porject is `v18.18.2`
