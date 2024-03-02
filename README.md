@@ -22,7 +22,7 @@ https://zeroxarcade.netlify.app/
 
 ## How to Run it Locally?
 
-Follow the instructions to setup [frontend](https://github.com/ZeroX-Games/eth-denver/blob/main/frontend/README.md) and [backend](https://github.com/ZeroX-Games/eth-denver/tree/main/backend).
+Follow the instructions to setup [backend](https://github.com/ZeroX-Games/eth-denver/tree/main/backend) and [frontend](https://github.com/ZeroX-Games/eth-denver/blob/main/frontend/README.md).
 
 ## Screenshots
 
