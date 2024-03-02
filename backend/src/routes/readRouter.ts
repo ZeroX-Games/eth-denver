@@ -2,6 +2,12 @@ import { route, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import NFTCollectionManager from "../utils/Storage/KeyValueLevelDB";
 import { z } from "zod";
+import path from "path";
+
+const basePath = path.resolve(__dirname, '../../');
+const dbPath = path.join(basePath, 'DB');
+
+
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -40,7 +46,7 @@ export const FetchNFTValuesRouter = route({
 
             try {
                 const result = await accessDatabaseWithRetry(async () => {
-                    const manager = NFTCollectionManager.getInstance("../DB", chainID.toString(), domainId.toString());
+                    const manager = NFTCollectionManager.getInstance(dbPath, chainID.toString(), domainId.toString());
                     const attributeIDs = await Promise.all(attribute.map(async (item) => {
                         return manager.getAttributeId(domainId.toString(), chainID.toString(), item);
                     }));

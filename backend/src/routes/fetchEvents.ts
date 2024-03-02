@@ -2,6 +2,10 @@ import { route, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import NFTCollectionManager from "../utils/Storage/KeyValueLevelDB";
 import { z } from "zod";
+import path from "path";
+
+const basePath = path.resolve(__dirname, '../../');
+const dbPath = path.join(basePath, 'DB');
 
 
 function delay(ms) {
@@ -35,7 +39,7 @@ export const fetchEventsRouter = route({
             try {
                 const { deltas, chainID } = input;
                 const domainID = deltas[0].domainId;
-                const manager = NFTCollectionManager.getInstance("../DB", chainID.toString(), domainID.toString());
+                const manager = NFTCollectionManager.getInstance(dbPath, chainID.toString(), domainID.toString());
                 let attributes: any = [];
                 for (let i = 0; i < deltas.length; i++) {
                     // Use the retry mechanism for getting collection attributes
