@@ -4,7 +4,7 @@ const DetailInfoTitle = () => {
   return (
     <HStack>
       <Text fontSize="xx-large" fontWeight={700} lineHeight="40px">
-        MEEBIT #12977
+        MEEBIT #172
       </Text>
     </HStack>
   );

@@ -40,7 +40,7 @@ const TokenControllerLayout = () => {
         <CheckCircleIcon />
         <Button>Base</Button>
       </HStack>
-      <Text w="100%">Meebit #12977</Text>
+      <Text w="100%">Meebit #172</Text>
       <HStack w="100%" gap={12} alignItems="center">
         <Box borderColor="gray.500" borderWidth="15px">
           <Image src={meebitChar} w="250px" aspectRatio="1/1" />
