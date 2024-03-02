@@ -1,16 +1,19 @@
-# eth-denver
+# Event-Driven Mentality towards the Renaissance of NFTs
+
+<img width="1754" alt="image" src="https://github.com/ZeroX-Games/eth-denver/assets/131199919/89475e31-b89f-4ca0-8f87-28c75afa286a">
 
 
-## Misc.
 
-### Credits
-- Storm Spirit Hero Picture - https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/storm_spirit.png
-- Street Fighter Fighting Background - https://www.streetfighter.com/article/sites/2/2023/05/ui01_thiumb.jpg
-- Street Fighter UI Kit - https://www.uplabs.com/posts/street-fighter-6-ui-kit
-- Dota2 3D Model - https://dotaloadout.com/
-- Pichu Animations - https://shinobi-bacon.tumblr.com/post/189062295358/have-some-pichu-gifs
-- Pichu Sprites - https://pokemondb.net/sprites/pichu
-- Pichu Walking Sprite - https://archives.bulbagarden.net/wiki/File:Ani172OD.png
-- Pichu PokeCard - https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/pl4/25/
-- Gold Walking Sprite - https://bulbapedia.bulbagarden.net/wiki/File:EthanHGSSwalkdown.png
-- PokeMMO Screenshot - https://pokemmo.com/build/images/screenshot/a.debf11f5.png
+## Live Demo
+
+https://zeroxarcade.netlify.app/
+
+## How to Run it Locally?
+
+Follow the instructions to setup [frontend](https://github.com/ZeroX-Games/eth-denver/blob/main/frontend/README.md) and [backend](https://github.com/ZeroX-Games/eth-denver/tree/main/backend).
+
+## Screenshots
+
+![image](https://github.com/ZeroX-Games/eth-denver/assets/131199919/8dd8b92e-40e6-47e8-a5c3-681198693f5d)
+
+![image](https://github.com/ZeroX-Games/eth-denver/assets/131199919/16cf0c51-2127-43b2-b144-4dd02a47d34a)
